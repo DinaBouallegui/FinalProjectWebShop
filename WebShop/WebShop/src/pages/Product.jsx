@@ -1,10 +1,14 @@
 import { Add, Remove } from "@material-ui/icons";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Announcement from "../components/Announcement";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import Newsletter from "../components/Newsletter";
-import {mobile} from "../responsive"
+import {mobile} from "../responsive";
+import {useEffect, useState} from "react";
+import {publicRequest} from "../requestMethods";
+
 
 const Container = styled.div``;
 
@@ -117,6 +121,22 @@ const Button = styled.button`
 `;
 
 const Product = () => {
+  const location = useLocation();
+
+  const id = location.pathname.split("/")[2]
+
+  const [product, setProduct] = useState({});
+
+  useEffect(() => {
+    const getProduct = async () => {
+      try {
+        const res = await publicRequest.get("/producst/find/"+ id)
+        setProduct(res.data);
+      } catch {}
+    };
+  getProduct();
+  }, [id]);
+
   return (
     <Container>
       <Navbar />
@@ -124,7 +144,7 @@ const Product = () => {
       <Wrapper>
         
         <ImgContainer>
-          <Image src="https://images.samsung.com/is/image/samsung/p6pim/my/feature/164179267/my-feature-galaxy-z-flip4-f721-533552487?$FB_TYPE_C_JPG$" />
+          <Image src= {product.img } />
         </ImgContainer>
 
         <InfoContainer>
