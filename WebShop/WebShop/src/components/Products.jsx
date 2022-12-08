@@ -69,5 +69,5 @@ const Products = ({cat,filters,sort}) => {
   );
 };
 
-export default Products
+export default Products;
 

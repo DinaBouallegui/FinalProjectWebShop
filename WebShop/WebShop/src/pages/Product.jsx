@@ -4,7 +4,11 @@ import Announcement from "../components/Announcement";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import Newsletter from "../components/Newsletter";
-import {mobile} from "../responsive"
+import {mobile} from "../responsive";
+import {useLocation} from "react-router-dom";
+import { publicRequest } from "../requestMethods";
+import {useEffect, useState} from "react";
+
 
 const Container = styled.div``;
 
@@ -117,6 +121,36 @@ const Button = styled.button`
 `;
 
 const Product = () => {
+  const location = useLocation();
+  const id = location.pathname.split("/")[2];
+  const [product, setProduct] = useState({});
+  const [quantity, setQuantity] = useState(1);
+  const [color, setColor] = useState("");
+  const [storage, setStorage] = useState("");
+
+  useEffect(()=>{
+    const getProduct = async ()=>{
+      try{
+        const res = await publicRequest.get("/products/find/" +id)
+        setProduct(res.data);
+      } catch{}
+    };
+    getProduct();
+  }, [id]);
+
+  const handleQuantity = (type) =>{ 
+    if(type === "dec"){ 
+    
+    quantity>1 &&  setQuantity(quantity-1)
+    } else{ 
+      setQuantity(quantity+1)
+    }
+  };
+
+  const handleClick = ()=>{ 
+
+  };
+
   return (
     <Container>
       <Navbar />
@@ -124,40 +158,40 @@ const Product = () => {
       <Wrapper>
         
         <ImgContainer>
-          <Image src="https://images.samsung.com/is/image/samsung/p6pim/my/feature/164179267/my-feature-galaxy-z-flip4-f721-533552487?$FB_TYPE_C_JPG$" />
+          <Image src={product.img} />
         </ImgContainer>
 
         <InfoContainer>
-          <Title>Samsung Galaxy Z Flip 4</Title>
+          <Title>{product.title}</Title>
           <Desc>
-             Trade in your old smartphone for an instant discount 
-             Limited time offer! Get up to $290 off when you trade in now!
+            {product.desc}
           </Desc>
 
-          <Price>$ 999.00</Price>
+          <Price>{product.price}</Price>
           <FilterContainer>
             <Filter>
-              <FilterTitle>Color</FilterTitle>
-              <FilterColor color="black" />
-              <FilterColor color="darkblue" />
+            <FilterTitle>Color</FilterTitle>
+              {product.color?.map((c) => (
+                <FilterColor color={c} key={c} onClick={() => setColor(c)} />
+              ))}
               <FilterColor color="gray" />
             </Filter>
             <Filter>
               <FilterTitle>Storage</FilterTitle>
-              <FilterSize>
-                <FilterSizeOption>128GB</FilterSizeOption>
-                <FilterSizeOption>256GB</FilterSizeOption>
-                <FilterSizeOption>512GB</FilterSizeOption>
+              <FilterSize onChange={(e)=> setStorage(e.target.value)}>
+                {product.storage?.map((s) => (
+                  <FilterSizeOption key = {s}>{s}</FilterSizeOption>
+                ))}
               </FilterSize>
             </Filter>
           </FilterContainer>
           <AddContainer>
             <AmountContainer>
-              <Remove />
-              <Amount>1</Amount>
-              <Add />
+              <Remove onClick ={()=> handleQuantity("dec")}/>
+              <Amount>{quantity}</Amount>
+              <Add onClick ={()=> handleQuantity("inc")}/>
             </AmountContainer>
-            <Button>ADD TO CART</Button>
+            <Button onClick ={handleClick}>ADD TO CART</Button>
           </AddContainer>
         </InfoContainer>
       </Wrapper>
