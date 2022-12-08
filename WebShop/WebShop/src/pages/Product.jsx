@@ -6,8 +6,14 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import Newsletter from "../components/Newsletter";
 import {mobile} from "../responsive";
+<<<<<<< HEAD
 import {useEffect, useState} from "react";
 import {publicRequest} from "../requestMethods";
+=======
+import {useLocation} from "react-router-dom";
+import { publicRequest } from "../requestMethods";
+import {useEffect, useState} from "react";
+>>>>>>> b9c0aa56c6e33b065cffad128bbb9d9752ccd914
 
 
 const Container = styled.div``;
@@ -122,6 +128,7 @@ const Button = styled.button`
 
 const Product = () => {
   const location = useLocation();
+<<<<<<< HEAD
 
   const id = location.pathname.split("/")[2]
 
@@ -137,6 +144,37 @@ const Product = () => {
   getProduct();
   }, [id]);
 
+=======
+  const id = location.pathname.split("/")[2];
+  const [product, setProduct] = useState({});
+  const [quantity, setQuantity] = useState(1);
+  const [color, setColor] = useState("");
+  const [storage, setStorage] = useState("");
+
+  useEffect(()=>{
+    const getProduct = async ()=>{
+      try{
+        const res = await publicRequest.get("/products/find/" +id)
+        setProduct(res.data);
+      } catch{}
+    };
+    getProduct();
+  }, [id]);
+
+  const handleQuantity = (type) =>{ 
+    if(type === "dec"){ 
+    
+    quantity>1 &&  setQuantity(quantity-1)
+    } else{ 
+      setQuantity(quantity+1)
+    }
+  };
+
+  const handleClick = ()=>{ 
+
+  };
+
+>>>>>>> b9c0aa56c6e33b065cffad128bbb9d9752ccd914
   return (
     <Container>
       <Navbar />
@@ -144,40 +182,44 @@ const Product = () => {
       <Wrapper>
         
         <ImgContainer>
+<<<<<<< HEAD
           <Image src= {product.img } />
+=======
+          <Image src={product.img} />
+>>>>>>> b9c0aa56c6e33b065cffad128bbb9d9752ccd914
         </ImgContainer>
 
         <InfoContainer>
-          <Title>Samsung Galaxy Z Flip 4</Title>
+          <Title>{product.title}</Title>
           <Desc>
-             Trade in your old smartphone for an instant discount 
-             Limited time offer! Get up to $290 off when you trade in now!
+            {product.desc}
           </Desc>
 
-          <Price>$ 999.00</Price>
+          <Price>{product.price}</Price>
           <FilterContainer>
             <Filter>
-              <FilterTitle>Color</FilterTitle>
-              <FilterColor color="black" />
-              <FilterColor color="darkblue" />
+            <FilterTitle>Color</FilterTitle>
+              {product.color?.map((c) => (
+                <FilterColor color={c} key={c} onClick={() => setColor(c)} />
+              ))}
               <FilterColor color="gray" />
             </Filter>
             <Filter>
               <FilterTitle>Storage</FilterTitle>
-              <FilterSize>
-                <FilterSizeOption>128GB</FilterSizeOption>
-                <FilterSizeOption>256GB</FilterSizeOption>
-                <FilterSizeOption>512GB</FilterSizeOption>
+              <FilterSize onChange={(e)=> setStorage(e.target.value)}>
+                {product.storage?.map((s) => (
+                  <FilterSizeOption key = {s}>{s}</FilterSizeOption>
+                ))}
               </FilterSize>
             </Filter>
           </FilterContainer>
           <AddContainer>
             <AmountContainer>
-              <Remove />
-              <Amount>1</Amount>
-              <Add />
+              <Remove onClick ={()=> handleQuantity("dec")}/>
+              <Amount>{quantity}</Amount>
+              <Add onClick ={()=> handleQuantity("inc")}/>
             </AmountContainer>
-            <Button>ADD TO CART</Button>
+            <Button onClick ={handleClick}>ADD TO CART</Button>
           </AddContainer>
         </InfoContainer>
       </Wrapper>

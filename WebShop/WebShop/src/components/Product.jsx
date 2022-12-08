@@ -5,6 +5,8 @@ import {
   } from "@material-ui/icons";
 import { Link } from "react-router-dom";
   import styled from "styled-components";
+  import React from 'react';
+  import { Link } from 'react-router-dom';
   
   const Info = styled.div`
     opacity: 0;
@@ -76,10 +78,17 @@ import { Link } from "react-router-dom";
             <ShoppingCartOutlined />
           </Icon>
           <Icon>
+<<<<<<< HEAD
           <Link to={`/product/${item._id}`}>
           <SearchOutlined />
           </Link>
         </Icon>
+=======
+            <Link to={`/product/${item._id}`}>
+            <SearchOutlined />
+            </Link>
+          </Icon>
+>>>>>>> b9c0aa56c6e33b065cffad128bbb9d9752ccd914
           <Icon>
             <FavoriteBorderOutlined />
           </Icon>
@@ -87,5 +96,6 @@ import { Link } from "react-router-dom";
       </Container>
     );
   };
+  
   
   export default Product;
